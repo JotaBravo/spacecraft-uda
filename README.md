@@ -175,8 +175,6 @@ You can monitor the training process via [TensorBoard](https://www.tensorflow.or
 tensorboard --logdir="path to your logs folder"
 ```
 
-image.png
+![image](https://user-images.githubusercontent.com/22771127/186682318-b234bd56-05dc-44e2-95cd-973430a72d17.png)
 
-## Acknowledgment
-
-## References
+## Acknowledgments
