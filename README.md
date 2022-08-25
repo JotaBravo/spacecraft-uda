@@ -93,7 +93,7 @@ git clone https://github.com/JotaBravo/spacecraft-uda.git
 After [instaling conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) go to the spacecraft-uda folder and type in your terminal:
 
 ``` 
-conda env create -f Config/Conda_Env.yml
+conda env create -f env.yml
 conda activate spacecraft-uda
 ```
 
@@ -169,14 +169,15 @@ The script will take the initial configuration file and the training weights ass
 
 ## 4. Use tensorboard to observe the training process
 
-You can monitor the training process via [TensorBoard](https://www.tensorflow.org/tensorboard). In the command line type:
+You can monitor the training process via [TensorBoard](https://www.tensorflow.org/tensorboard) by typing in the command line:
 
 ```
 tensorboard --logdir="path to your logs folder"
 ```
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/22771127/186684570-d866c48f-d5f8-4f51-9407-dd9b20c248c8.png" alt="TensorBoard output"  width="640""/>
+</p>
 
-image.png
 
 ## Acknowledgment
-
-## References
+This work is supported by Comunidad Autónoma de Madrid (Spain) under the Grant IND2020/TIC-17515
