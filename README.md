@@ -156,11 +156,26 @@ python main.py --cfg "configs/experiment.json"
 
 ### 3.2 Train a model with pseudo-labels
 
-TBW
+
+To train the pseudo-labelling loop you first need to configure the "main_loop.py" script by specifying the path to the folder where the configuration files will be stored, and the initial configuration file. 
+
+```python
+NITERS      = 100
+BASE_CONFIG = "configs_loop_sunlamp_10_epoch" # folder path
+BASE_FILE   = "loop_sunlamp_niter_0000.json"
+```
+
+The script will take the initial configuration file and the training weights associated to that training file to generate pseudo-labels and train a new model. Every iteration a new configuration file is generated automatically so the results are not overwritten.
 
 ## 4. Use tensorboard to observe the training process
 
+You can monitor the training process via [TensorBoard](https://www.tensorflow.org/tensorboard). In the command line type:
 
+```
+tensorboard --logdir="path to your logs folder"
+```
+
+image.png
 
 ## Acknowledgment
 
