@@ -1,0 +1,34 @@
+{
+
+    "root_dir"         : "../data/speedplus/",
+    "path_results"     : "results_loop_lightbox",
+
+    "device"           : "cuda",
+    "start_epoch"      :0,
+    "total_epochs"     :10,
+    "save_tensorboard" :100,
+    "save_epoch"       :1,
+    "save_optimizer"   :false,  
+
+    "n_stacks"        :2,
+    "mean"            :54.9951,
+    "std"             :30.1454,    
+    "mean_val"            :54.9951,
+    "std_val"             :30.1454,        
+    "batch_size"      :8,
+    "batch_size_test" :1,
+    "num_stacks"      :2,
+
+    "num_workers"   :8,
+    "pin_memory"    :1,
+    "rows"          :640,
+    "cols"          :640,
+    "lr"            :2.5e-4,
+
+    "activate_lpnp":true,
+    "activate_l3d": true,
+
+    "split_submission": "lightbox",
+    "isloop":true
+
+}
