@@ -259,7 +259,6 @@ class exkp(nn.Module):
           
             kp  = kp_(inter)
             cnv = cnv_(kp)
-            print(cnv.shape)
 
             out = {}
 
@@ -275,7 +274,6 @@ class exkp(nn.Module):
                 inter = self.inters_[ind](inter) + self.cnvs_[ind](cnv)
                 inter = self.relu(inter)
                 inter = self.inters[ind](inter)
-        exit()
         return outs
 
 
@@ -323,6 +321,6 @@ class SmallHourglassNet(exkp):
             kp_layer=residual, cnv_dim=256
         )
 
-def get_small_hourglass_net(num_layers, heads, head_conv):
-  model = SmallHourglassNet(heads, 2)
+def get_small_hourglass_net(heads):
+  model = SmallHourglassNet(heads,2)
   return model  

@@ -63,7 +63,7 @@ if config["isloop"]:
     config["path_pretrain"] = path_pretrain
 
 # Load pretrained weights
-if config["path_pretrain"] is not None:
+if config["path_pretrain"]:
     model_dict = torch.load(config["path_pretrain"])
 
     if not config["isloop"]:

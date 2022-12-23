@@ -1,7 +1,7 @@
 {
 
-    "root_dir"         : "../data/speedplus/",
-    "path_pretrain"    : "pretrained_weights/ctdet_coco_hg.pth",
+    "root_dir"         : "/home/jbp/Desktop/VPU/rhome/jbp/kelvins_esa/data/speedplus/",
+    "path_pretrain"    : "",
     "path_results"     : "results",
     "device"           : "cuda",
     "start_epoch"      :0,
@@ -13,7 +13,7 @@
     "n_stacks"        :2,
     "mean"            :41.3050,
     "std"             :37.0706,    
-    "batch_size"      :8,
+    "batch_size"      :2,
     "batch_size_test" :1,
     "num_stacks"      :2,
 
@@ -27,7 +27,9 @@
     "lr"            :2.5e-4,
 
     "activate_lpnp":true,
-    "activate_l3d": true
+    "activate_l3d": true,
 
+
+    "isloop":false
 
 }
