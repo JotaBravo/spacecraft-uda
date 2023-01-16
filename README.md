@@ -1,6 +1,6 @@
 # Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination
 
-Official PyTorch implementation of "[Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination]" (https://arxiv.org/abs/2212.13415) by Juan Ignacio Bravo Pérez-Villar, Álvaro García-Martín and Jesús Bescós.
+Official PyTorch implementation of [Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination](https://arxiv.org/abs/2212.13415) by Juan Ignacio Bravo Pérez-Villar, Álvaro García-Martín and Jesús Bescós.
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/22771127/185179617-e77acf05-2f93-45dc-9d2d-a9d771e48d0b.png" alt="Deimos Space Logo" style="width:15%"/>
