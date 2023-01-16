@@ -1,6 +1,6 @@
 {
 
-    "root_dir"         : "/home/jbp/Desktop/VPU/rhome/jbp/kelvins_esa/data/speedplus/",
+    "root_dir"         : "",
     "path_pretrain"    : "",
     "path_results"     : "results",
     "device"           : "cuda",
