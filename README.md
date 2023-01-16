@@ -1,6 +1,6 @@
 # Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination
 
-Official PyTorch implementation of "Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination" by Juan Ignacio Bravo Pérez-Villar, Álvaro García-Martín and Jesús Bescós.
+Official PyTorch implementation of "[Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination]" (https://arxiv.org/abs/2212.13415) by Juan Ignacio Bravo Pérez-Villar, Álvaro García-Martín and Jesús Bescós.
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/22771127/185179617-e77acf05-2f93-45dc-9d2d-a9d771e48d0b.png" alt="Deimos Space Logo" style="width:15%"/>
@@ -8,7 +8,16 @@ Official PyTorch implementation of "Spacecraft Pose Estimation Based on Unsuperv
     <img src="https://user-images.githubusercontent.com/22771127/189942036-58e17f72-a385-4955-be07-f347e109eaba.png"  alt="VPU Lab Logo" style="width:15%"/>
 </p>
 
-If you find this work useful, please consider citing... 
+If you find this work useful, please consider citing:
+```
+@article{perez2022spacecraft,
+  title={Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination},
+  author={P{\'e}rez-Villar, Juan Ignacio Bravo and Garc{\'\i}a-Mart{\'\i}n, {\'A}lvaro and Besc{\'o}s, Jes{\'u}s},
+  booktitle={European Conference on Computer Vision},
+  year={2022},
+  organization={Springer}
+}
+```
 
 ## 1 - Summary
 This paper presents the second ranking solution to the [Kelvins Pose Estimation 2021 Challenge](https://kelvins.esa.int/pose-estimation-2021). The proposed solution has ranked second in both Sunlamp and Lightbox categories, with the best total average error over the two datasets. 
