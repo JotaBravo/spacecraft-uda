@@ -86,7 +86,7 @@ SPEED+ provides the ground-truth information as pairs of images and poses (relat
 Download and decompress the kptsmap.zip file. Place the kptsmap folder under the synthetic folder of the speedplus dataset.
 
 - Download from [Mega](https://mega.nz/file/oa9B0IiI#gMe7gaU1-vs1ZrFvLGAL3SXnQn9T9IENNXhJqJSQmeY)
-- Download from [OneDrive](https://dauam-my.sharepoint.com/:u:/g/personal/juanignacio_bravo_estudiante_uam_es/EafYSGNOw8VFqfpslgLAifIB3pX_gYJLsDld35t_ax4Z6Q?e=e2G9u0)
+- Download from [OneDrive](https://dauam-my.sharepoint.com/:u:/g/personal/juanignacio_bravo_estudiante_uam_es/EafYSGNOw8VFqfpslgLAifIB3pX_gYJLsDld35t_ax4Z6Q?e=YmlYcw)
 
 
 #### **2.1.2. Generate the heatmaps**
