@@ -10,11 +10,12 @@ Official PyTorch implementation of [Spacecraft Pose Estimation Based on Unsuperv
 
 If you find this work useful, please consider citing:
 ```
-@article{perez2022spacecraft,
+@inproceedings{perez2023spacecraft,
   title={Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination},
   author={P{\'e}rez-Villar, Juan Ignacio Bravo and Garc{\'\i}a-Mart{\'\i}n, {\'A}lvaro and Besc{\'o}s, Jes{\'u}s},
-  booktitle={European Conference on Computer Vision},
-  year={2022},
+  booktitle={Computer Vision--ECCV 2022 Workshops: Tel Aviv, Israel, October 23--27, 2022, Proceedings, Part I},
+  pages={37--52},
+  year={2023},
   organization={Springer}
 }
 ```
