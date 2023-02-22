@@ -93,6 +93,9 @@ Download and decompress the kptsmap.zip file. Place the kptsmap folder under the
 
 TBW 
 
+#### **2.1.3. Keypoints**
+Place the keypoints file "kpts.mat" into the speed_root folder
+
 ### 2.2. Clone Repository and create a Conda environment
 To clone the repository, type in your terminal:
 
@@ -106,6 +109,8 @@ After [instaling conda](https://conda.io/projects/conda/en/latest/user-guide/ins
 conda env create -f env.yml
 conda activate spacecraft-uda
 ```
+
+
 
 ## 3. Training process
 
