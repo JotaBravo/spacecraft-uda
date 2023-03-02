@@ -172,8 +172,11 @@ python main.py --cfg "configs/experiment.json"
 
 ### 3.2 Train a model with pseudo-labels
 
+The script will take the initial configuration file and the training weights associated to that training file to generate pseudo-labels and train a new model. Every iteration a new configuration file is generated automatically so the results are not overwritten.
 
-To train the pseudo-labelling loop you first need to configure the "main_loop.py" script by specifying the path to the folder where the configuration files will be stored, and the initial configuration file. 
+#### 3.2.1 Create the config file
+
+To train the pseudo-labelling loop you first need to configure the "main_loop.py" script by specifying the path to the folder where the configuration files will be stored, the initial configuration file and the number of iterations. In each iteration a new configuration file will be created in the BASE_CONFIG folder with an increased niter counter. For example you first create the folder "configs_loop_sunlamp_10_epoch" and place the config file "loop_sunlamp_niter_0000.json" under it. For the next iteration of the pseudolabelling a new configuration file loop_sunlamp_niter_0001.json will be created.
 
 ```python
 NITERS      = 100
@@ -181,7 +184,11 @@ BASE_CONFIG = "configs_loop_sunlamp_10_epoch" # folder path
 BASE_FILE   = "loop_sunlamp_niter_0000.json"
 ```
 
-The script will take the initial configuration file and the training weights associated to that training file to generate pseudo-labels and train a new model. Every iteration a new configuration file is generated automatically so the results are not overwritten.
+#### 3.2.2 Place the first checkpoint
+
+After you have crated the configuration files, you will need to manually place the weights used for the first iteration of the pseudo-labelling process. Under the "results" folder create a folder with the BASE_CONFIG name, and then another subfolder with the BASE_FILE name. For example "results/configs_loop_sunlamp_10_epoch/loop_sunlamp_niter_0000.json". Under that folder place a new subfolder called "ckpt" containing a file of weights named "init.pth". The final result should look as "results/configs_loop_sunlamp_10_epoch/loop_sunlamp_niter_0000.json/ckpt/init.pth"
+
+The init.pth should be the weights of the model trained over the synthetic domain. If you want to skip that training phase you can use our available weights in Section 5 of this page.
 
 ## 4. Use tensorboard to observe the training process
 
