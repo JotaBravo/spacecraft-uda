@@ -190,6 +190,9 @@ After you have crated the configuration files, you will need to manually place t
 
 The init.pth should be the weights of the model trained over the synthetic domain. If you want to skip that training phase you can use our available weights in Section 5 of this page.
 
+### 3.2.3 Create the Sunlamp and Lightbox train folders
+Go to the folder where you have the dataset saved and duplicate the Sunlamp and Lightbox folders, renaming the new ones as "sunlamp_train" and "lightbox_train". In these folders the new pseudo-labels will be stored and generated.
+
 ## 4. Use tensorboard to observe the training process
 
 You can monitor the training process via [TensorBoard](https://www.tensorflow.org/tensorboard) by typing in the command line:
