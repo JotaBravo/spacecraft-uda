@@ -214,8 +214,8 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
 
             # Parse inputs
             self.sample_ids = [label['filename'] for label in label_list]
-            self.train = (split == 'train') #or (split == 'sunlamp_train') or (split == 'lightbox_train')
-            self.validation = (split == 'validation') or (split == 'sunlamp_train') or (split == 'lightbox_train')
+            self.train = (split == 'train') or (split == 'sunlamp_train') or (split == 'lightbox_train')
+            self.validation = (split == 'validation') #or (split == 'sunlamp_train') or (split == 'lightbox_train')
 
             if self.train or self.validation:
                 self.labels = {label['filename']: {'q': label['q_vbs2tango_true'], 'r': label['r_Vo2To_vbs_true']} for label in label_list}
