@@ -203,7 +203,7 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
                 self.image_root = os.path.join(speed_root, split, 'images')
                 self.mask_root  = os.path.join(speed_root, split, 'kptsmap')
 
-                with open(os.path.join(speed_root, split, 'lightbox_pseudo_gt.json'), 'r') as f:
+                with open(os.path.join(speed_root, split, 'train.json'), 'r') as f:
                     label_list = json.load(f)
 
             else:
