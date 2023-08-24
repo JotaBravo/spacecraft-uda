@@ -23,11 +23,11 @@ from models import large_hourglass
 from src import utils
 
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning) 
 #to remove
 import numpy as np
 import cv2
 np.set_printoptions(suppress=True)
+warnings.filterwarnings("ignore", category=UserWarning) 
 
 parser = argparse.ArgumentParser(description='Pose Estimation')
 parser.add_argument('--cfg', '--config', metavar='DIR', help='Path to the configuration', required=True)

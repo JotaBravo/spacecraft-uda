@@ -1,7 +1,3 @@
-import numpy as np #Error: mkl-service + Intel(R) MKL: MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library.
-                   # Try to import numpy first or set the threading layer accordingly. Set MKL_SERVICE_FORCE_INTEL to force it.
-
-
 import argparse
 import os
 import pathlib
@@ -9,6 +5,7 @@ import warnings
 
 import kornia
 import kornia.augmentation as K
+import numpy as np
 import roma
 import torch
 import torch.nn.functional as F
@@ -20,7 +17,7 @@ from tqdm import tqdm
 
 from BPnP import BPnP
 from loaders import speedplus_segmentation_precomputed as speedplus
-from models import large_hourglass
+from models import poseresnet
 from src import utils
 
 
@@ -52,7 +49,8 @@ writer  = tensorboard.writer.SummaryWriter(path_logs)
 
 # Instantiate the network. Two heads, one for key-points the other for depth
 heads = {'hm_c':11, 'depth': 11}
-hourglass  = large_hourglass.get_large_hourglass_net(heads, config["num_stacks"]).to(device)
+model  =  poseresnet.get_pose_depth_net(config["resnet_size"]).to(device)
+
 
 # If we're training in a loop (for pseudo-labels) we automatically
 # load the weights from the previous iteration
@@ -76,10 +74,10 @@ if config["path_pretrain"]:
 
         #model_dict = model_dict["state_dict"]
         #model_dict = OrderedDict((k.split("module.")[1], v) for k, v in model_dict.items())
-        hourglass.load_state_dict(model_dict,strict=False)
+        model.load_state_dict(model_dict,strict=False)
 
     else:
-        hourglass.load_state_dict(model_dict,strict=True)
+        model.load_state_dict(model_dict,strict=True)
 
 print("\n--------------  Training started  -------------------\n")
 print("  -- Using config from:\t", args.cfg)
@@ -148,7 +146,7 @@ val_loader    = torch.utils.data.DataLoader(val_dataset,
 #        Optimizer/Loss         #
 # ----------------------------- #
 
-optim_params = [ {"params": hourglass.parameters(),
+optim_params = [ {"params": model.parameters(),
                   "lr": config["lr"]}]
 optimizer = torch.optim.Adam(optim_params)
 mse_loss = torch.nn.MSELoss()
@@ -181,7 +179,7 @@ best_val_score = 1e16
 
 for epoch in range(config["start_epoch"], config["total_epochs"]):
     print("Epoch: ", epoch, "\n")
-    hourglass.train(True)
+    model.train(True)
 
     # ----------------------------- #
     #        Train Epoch            #
@@ -211,8 +209,7 @@ for epoch in range(config["start_epoch"], config["total_epochs"]):
         dict_writer["kpts_gt"]    = kpts_gt
 
         # Obtain the prediction
-        output = hourglass(img_source) #BxNKPTSxROWSxCOLS
-
+        output = model(img_source) #BxNKPTSxROWSxCOLS
         # Initialize variables
         total_loss = 0
         loss_hm  = 0
@@ -222,6 +219,7 @@ for epoch in range(config["start_epoch"], config["total_epochs"]):
         tra_err  = 0
 
         for level_id, level in enumerate(output):
+            
             # Interpolate network output to input resolution
             heatmap_pred = F.interpolate(level["hm_c"], size=(config["rows"],config["cols"]),
                                                         mode='bilinear',
@@ -329,17 +327,17 @@ for epoch in range(config["start_epoch"], config["total_epochs"]):
 
         if not i%config["save_tensorboard"]:
 
-            utils.update_writer(writer,dict_writer, i + len(train_loader)*epoch, config)
+            utils.update_writer(writer, dict_writer, i + len(train_loader)*epoch, config)
 
     #----------------------------------------------------------------------------------------------
     #                                                   Eval Loop
     #----------------------------------------------------------------------------------------------
     if not config["isloop"]:
         with torch.no_grad():
-            hourglass.eval()
+            model.eval()
             val_score, val_score_t, val_score_r = utils.eval_loop(val_loader,
                                                     aug_intensity_val,
-                                                    hourglass,
+                                                    model,
                                                     kpts_world,
                                                     k_mat_input,
                                                     device,
@@ -354,13 +352,13 @@ for epoch in range(config["start_epoch"], config["total_epochs"]):
                 best_val_score = val_score
 
                 string_model = "epoch_" + str(epoch) + "_" + str(best_val_score) + "model_seg.pth"
-                torch.save(hourglass.state_dict(),  os.path.join(path_checkpoints, string_model))
+                torch.save(model.state_dict(),  os.path.join(path_checkpoints, string_model))
 
                 if config["save_optimizer"]:
                     string_optimizer = "epoch_" + str(epoch) + "_" + str(best_val_score) + "optimizer.pth"
                     torch.save(optimizer.state_dict(),  os.path.join(path_checkpoints, string_optimizer))
 
             if epoch+1 == config["total_epochs"]:
-                torch.save(hourglass.state_dict(),  os.path.join(path_checkpoints, "last_epoch_" + str(epoch) +"model_seg.pth"))
+                torch.save(model.state_dict(),  os.path.join(path_checkpoints, "last_epoch_" + str(epoch) +"model_seg.pth"))
     else:
-        torch.save(hourglass.state_dict(),  os.path.join(path_checkpoints, "init.pth"))
+        torch.save(model.state_dict(),  os.path.join(path_checkpoints, "init.pth"))
