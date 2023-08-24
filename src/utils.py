@@ -348,7 +348,7 @@ def generate_json_loop(test_loader ,aug_intensity_test, hourglass, kpts_world, k
             aux_0, rvecs_0, tvecs_0, inliers_0= cv2.solvePnPRansac(world_kpts2_0, pred_kpts_0, k_mat_input, np.array(cam.dcoef),confidence=0.99,reprojectionError=2.0,flags=cv2.SOLVEPNP_EPNP)
             aux_1, rvecs_1, tvecs_1, inliers_1= cv2.solvePnPRansac(world_kpts2_1, pred_kpts_1, k_mat_input, np.array(cam.dcoef),confidence=0.99,reprojectionError=2.0,flags=cv2.SOLVEPNP_EPNP)
 
-            
+            # you could also use the inliers for consensus 
             if aux_0 and aux_1:
 
                 if total_rp0 > total_rp1:

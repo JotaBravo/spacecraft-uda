@@ -2,6 +2,7 @@ import os
 import shutil
 from src.utils import format_and_copy_json
 
+# Change these parameters
 NITERS      = 100
 BASE_CONFIG = "configs_loop_sunlamp_10_epoch"
 BASE_FILE   = "loop_sunlamp_niter_0000.json"

@@ -13,6 +13,8 @@ from kornia.geometry import render_gaussian2d
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
+# New method with png files
+
 '''Define function to run mutiple processors and pool the results together'''
 def run_multiprocessing(func, i, n_processors):
     with Pool(processes=n_processors) as pool:

@@ -29,6 +29,7 @@
     "activate_l3d": true,
 
     "split_submission": "lightbox",
+    
     "isloop":true
 
 }

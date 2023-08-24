@@ -10,6 +10,8 @@ from multiprocessing import Pool
 from multiprocessing import freeze_support
 import time
 
+# Old legacy method with npz files
+
 '''Define function to run mutiple processors and pool the results together'''
 def run_multiprocessing(func, i, n_processors):
     with Pool(processes=n_processors) as pool:

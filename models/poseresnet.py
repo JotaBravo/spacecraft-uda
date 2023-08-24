@@ -292,8 +292,6 @@ class PoseDepthResNet(nn.Module):
                     nn.init.normal_(m.weight, std=0.001)
                     nn.init.constant_(m.bias, 0)
 
-            # pretrained_state_dict = torch.load(pretrained)
-            #logger.info('=> loading pretrained model {}'.format(pretrained))
             # self.load_state_dict(pretrained_state_dict, strict=False)
             checkpoint = pretrained# torch.load(pretrained)
             if isinstance(checkpoint, OrderedDict):

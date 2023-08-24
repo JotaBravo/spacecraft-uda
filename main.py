@@ -31,7 +31,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 #     Initialization            #
 # ----------------------------- #
 
-parser = argparse.ArgumentParser(description="Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination")
+parser = argparse.ArgumentParser(description="Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus")
 parser.add_argument("-c", "--cfg", metavar="DIR", help="Path to the configuration file", required=True)
 args = parser.parse_args()
 

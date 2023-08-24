@@ -264,24 +264,15 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
                 q  = quat2dcm(q0)
                 r = np.expand_dims(np.array(r0),axis=1)
                 r = q@(r)
-#
+
                 ## Spacecraft kpts placed in front of the camera
                 kpts_cam = q.T@(self.kpts+r)
-                #depths   = kpts_cam[2,:]
-#
+
                 ## Project key-points to the camera
                 kpts_im = self.K@(kpts_cam/kpts_cam[2,:])
                 kpts_im = np.transpose(kpts_im[:2,:])
                 
-                # Make some cleaning (or not? kpts may fall outside and that should be fine)
-                #kpts_im[kpts_im[:,0] >= 1920,0] = 1920-1
-                #kpts_im[kpts_im[:,0] <= 0   ,0] = 0
-                #kpts_im[kpts_im[:,1] >= 1200,1] = 1200-1
-                #kpts_im[kpts_im[:,1] <= 0   ,1] = 0
 
-                # Key-points are scaled to the output size of the model
-                #kpts_im[:,0] *= self.col_factor_input
-                #kpts_im[:,1] *= self.row_factor_input
     
                 # Load the ground-truth heatmaps
                 heatmap = np.zeros((self.config["rows"], self.config["cols"],11),dtype='uint8')

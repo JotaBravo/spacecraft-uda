@@ -1,23 +1,24 @@
 {
 
     "root_dir"         : "/mnt/rhome/jbp/kelvins_esa/data/speedplus/",
-    "path_results"     : "results_loop_sunlamp",
-
+    "path_pretrain"    : "",
+    "path_results"     : "results",
     "device"           : "cuda",
     "start_epoch"      :0,
-    "total_epochs"     :10,
+    "total_epochs"     :20,
     "save_tensorboard" :100,
-    "save_epoch"       :1,
+    "save_epoch"       :5,
     "save_optimizer"   :false,  
 
-    "n_stacks"        :2,
-    "mean"            :46.8284,
-    "std"             :37.6364,    
-    "mean_val"            :46.8284,
-    "std_val"             :37.6364,        
-    "batch_size"      :8,
+
+    "mean"            :41.3050,
+    "std"             :37.0706,    
+    "batch_size"      :16,
     "batch_size_test" :1,
     "num_stacks"      :2,
+
+    "mean_val" :41.1280,
+    "std_val"  :36.9064,    
 
     "num_workers"   :8,
     "pin_memory"    :1,
@@ -28,7 +29,9 @@
     "activate_lpnp":true,
     "activate_l3d": true,
 
-    "split_submission": "sunlamp",
-    "isloop":true
+    "resnet_size":18,
+    "split_submission": "synthetic",
+
+    "isloop":false
 
 }

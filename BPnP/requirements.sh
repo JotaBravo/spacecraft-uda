@@ -2,7 +2,7 @@
 # module purge
 # module load CUDA/9.0.176 GCC/5.4.0-2.26 NCCL/2.3.7-CUDA-9.0.176
 
-########################### build conda env ###################################
+############################ build conda env ###################################
 conda init
 source ~/.bashrc
 conda create -n bpnp python=3.7 -y

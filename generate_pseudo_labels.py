@@ -2,30 +2,19 @@ from models import large_hourglass
 from src import utils
 
 import argparse
-import kornia
 import os
-import pathlib
-import roma
-import time
 import torch
 
-import torch.nn.functional as F
 import kornia.augmentation as K
 
-from collections import OrderedDict
-from tqdm import tqdm
 from torchvision import transforms
-from torch.utils import tensorboard
-
 from BPnP import BPnP
 from loaders import speedplus_segmentation_precomputed as speedplus
 from models import large_hourglass
 from src import utils
 
 import warnings
-#to remove
 import numpy as np
-import cv2
 np.set_printoptions(suppress=True)
 warnings.filterwarnings("ignore", category=UserWarning) 
 
