@@ -1,12 +1,16 @@
 # Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus
 
+<p align="center">
+    <img src="https://github.com/JotaBravo/spacecraft-uda/assets/22771127/2a2ca08c-3393-4713-b7da-37836e127b10" alt="Results" style="width:50%"/>
+</p>
+
+
 ## News
 **Update: October 2023** 
 
 We are happy to announce that an extended version of our previous [work](https://arxiv.org/abs/2212.13415) has been published in the IEEE Transactions in Aerospace and Electronic Systems.
 
 [Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus](https://ieeexplore.ieee.org/document/10225381)
-
 
 
 We have updated the repository to include:
