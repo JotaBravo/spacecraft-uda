@@ -98,7 +98,7 @@ speedplus
 
 SPEED+ provides the ground-truth information as pairs of images and poses (relative position and orientation of the spacecraft w.r.t the camera). Our method assumes the ground-truth is provided as key-point maps. We generate the key-point maps prior to the training to improve the speed. You can choose to download our computed key-points or create them manually.
 
-#### **2.1.1. Download the heatmaps **
+#### **2.1.1. Download the heatmaps**
 
 Download and decompress the kptsmap.zip file. Place the kptsmap folder under the synthetic folder of the speedplus dataset.
 
