@@ -26,11 +26,12 @@ for i in range(1, NITERS):
     # Generate pseudo-labels with the iter - 1
 
     # Take the initial model and make pseudolabels with it (t-1)
+
     previous_file   = BASE_FILE.split("niter")[0] + "niter_" + str(i-1).zfill(4) + ".json"
     previous_config = os.path.join(BASE_CONFIG, previous_file)
     os.system("python generate_pseudo_labels.py --cfg " +  previous_config)    
     format_and_copy_json(previous_config)
-        
+
     os.system("python create_maps.py --cfg " + target_config_path)
     ## Train the new model with the labels
     os.system("python main.py --cfg " + target_config_path)
