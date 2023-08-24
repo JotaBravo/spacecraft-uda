@@ -7,7 +7,10 @@ We are happy to announce that an extended version of our previous [work](https:/
 
 [Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus](https://ieeexplore.ieee.org/document/10225381)
 
+
+
 We have updated the repository to include:
+
 * Support for a lighter ResNet model from [[1]](https://github.com/microsoft/human-pose-estimation.pytorch).
 * Faster, more efficient ways to generate heatmaps.
 * Bug correction in the pseudo-label generation process.
