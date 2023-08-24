@@ -7,7 +7,7 @@ We are happy to announce that an extended version of our previous [work](https:/
 
 [Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus](https://ieeexplore.ieee.org/document/10225381)
 
-We have update the repository to include:
+We have updated the repository to include:
 * Support for a lighter ResNet model from [[1]](https://github.com/microsoft/human-pose-estimation.pytorch).
 * Faster, more efficient ways to generate heatmaps.
 * Bug correction in the pseudo-label generation process.
@@ -43,7 +43,7 @@ The main contributions of the paper are:
 
 The proposed architecture with the losses incorporating the 3D information are depicted in the following figure:
 <p align="center">
-<img src="https://user-images.githubusercontent.com/22771127/185176722-d28f7e5b-082d-4145-919a-3e1d3198f064.png" width="640">
+<img src="https://github.com/JotaBravo/spacecraft-uda/assets/22771127/c84d8040-387c-4e55-93f4-53aa92ef4267" width="840">
 </p>
 
 ## 2. Setup
@@ -95,7 +95,7 @@ speedplus
 
 SPEED+ provides the ground-truth information as pairs of images and poses (relative position and orientation of the spacecraft w.r.t the camera). Our method assumes the ground-truth is provided as key-point maps. We generate the key-point maps prior to the training to improve the speed. You can choose to download our computed key-points or create them manually.
 
-#### **2.1.1. Download the heatmaps (recommended)**
+#### **2.1.1. Download the heatmaps **
 
 Download and decompress the kptsmap.zip file. Place the kptsmap folder under the synthetic folder of the speedplus dataset.
 
@@ -214,6 +214,11 @@ And make sure that the  "resnet_size" field in the config is available.
 
 The script will take the initial configuration file and the training weights associated to that training file to generate pseudo-labels and train a new model. Every iteration a new configuration file is generated automatically so the results are not overwritten.
 
+<p align="center">
+<img src="https://github.com/JotaBravo/spacecraft-uda/assets/22771127/0f5b70ab-ec5b-486d-b94b-07a22d04f68d" width="640">
+</p>
+
+
 #### 3.2.1 Create the config file
 
 To train the pseudo-labelling loop you first need to configure the "main_loop.py" script by specifying the path to the folder where the configuration files will be stored, the initial configuration file and the number of iterations. In each iteration a new configuration file will be created in the BASE_CONFIG folder with an increased niter counter. For example you first create the folder "configs_loop_sunlamp_10_epoch" and place the config file "loop_sunlamp_niter_0000.json" under it. For the next iteration of the pseudolabelling a new configuration file loop_sunlamp_niter_0001.json will be created.
@@ -256,3 +261,6 @@ tensorboard --logdir="path to your logs folder"
 
 ## Acknowledgment
 This work is supported by Comunidad Autónoma de Madrid (Spain) under the Grant IND2020/TIC-17515
+
+## References
+[1] - Xiao, B., Wu, H., & Wei, Y. (2018). Simple baselines for human pose estimation and tracking. In Proceedings of the European conference on computer vision (ECCV) (pp. 466-481).
