@@ -1,6 +1,16 @@
-# Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination
+# Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus
 
-Official PyTorch implementation of [Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination](https://arxiv.org/abs/2212.13415) by Juan Ignacio Bravo Pérez-Villar, Álvaro García-Martín and Jesús Bescós.
+## News
+**Update: October 2023** 
+
+We are happy to announce that an extended version of our previous [work](https://arxiv.org/abs/2212.13415) has been published in the IEEE Transactions in Aerospace and Electronic Systems.
+
+[Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus](https://ieeexplore.ieee.org/document/10225381)
+
+We have update the repository to include:
+* Support for a lighter ResNet model from [[1]](https://github.com/microsoft/human-pose-estimation.pytorch).
+* Faster, more efficient ways to generate heatmaps.
+* Bug correction in the pseudo-label generation process.
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/22771127/185179617-e77acf05-2f93-45dc-9d2d-a9d771e48d0b.png" alt="Deimos Space Logo" style="width:15%"/>
@@ -8,16 +18,19 @@ Official PyTorch implementation of [Spacecraft Pose Estimation Based on Unsuperv
     <img src="https://user-images.githubusercontent.com/22771127/189942036-58e17f72-a385-4955-be07-f347e109eaba.png"  alt="VPU Lab Logo" style="width:15%"/>
 </p>
 
+
+## Cite
+
 If you find this work useful, please consider citing:
 ```
-@inproceedings{perez2023spacecraft,
-  title={Spacecraft Pose Estimation Based on Unsupervised Domain Adaptation and on a 3D-Guided Loss Combination},
-  author={P{\'e}rez-Villar, Juan Ignacio Bravo and Garc{\'\i}a-Mart{\'\i}n, {\'A}lvaro and Besc{\'o}s, Jes{\'u}s},
-  booktitle={Computer Vision--ECCV 2022 Workshops: Tel Aviv, Israel, October 23--27, 2022, Proceedings, Part I},
-  pages={37--52},
+@article{perez2023spacecraft,
+  title={Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus},
+  author={P{\'e}rez-Villar, Juan Ignacio Bravo and Garc{\'\i}a-Mart{\'\i}n, {\'A}lvaro and Besc{\'o}s, Jes{\'u}s and Escudero-Vi{\~n}olo, Marcos},
+  journal={IEEE Transactions on Aerospace and Electronic Systems},
   year={2023},
-  organization={Springer}
+  publisher={IEEE}
 }
+
 ```
 
 ## 1 - Summary
@@ -89,10 +102,28 @@ Download and decompress the kptsmap.zip file. Place the kptsmap folder under the
 - Download from [Mega](https://mega.nz/file/oa9B0IiI#gMe7gaU1-vs1ZrFvLGAL3SXnQn9T9IENNXhJqJSQmeY)
 - Download from [GoogleDrive](https://drive.google.com/file/d/1G3nFgRzI7GRJvBgvqtaa2a13gkAk4Zb_/view?usp=sharing)
 
+**Notes from update**: These heatmaps only work with the data loader "loaders/speedplus_segmentation_precomputed.py".
 
 #### **2.1.2. Generate the heatmaps**
 
-TBW 
+We provide two methods to generate the heatmaps:
+
+* The legacy method based on .npz files:
+
+```
+python create_maps.py --cfg  configs/experiment.json
+```
+**Note**: if heatmaps based on .npz files are to be used, use them in conjuction with the data loader "loaders/speedplus_segmentation_precomputed.py"
+
+* The new method based on .png files. This method sould be faster:
+```
+python create_maps_image.py --cfg  configs/experiment.json
+```
+**Note**: if heatmaps based on .png files are to be used, use them in conjuction with the data loader "loaders/speedplus_segmentation_precomputed_image.py"
+
+
+**Please make sure that the correct "split_submission" field is in the config file before generation.**
+
 
 #### **2.1.3. Keypoints**
 Place the keypoints file "kpts.mat" into the speed_root folder
@@ -159,6 +190,8 @@ To train a model simply modify the configuration file with your required values.
     "weigth_lpnp": 1e-1,  # Weight of the PnP loss
     "weigth_l3d": 1e-1,   # Weight of the 3D loss
 
+    "split_submission": "synthetic", # Dataset to use to generate labels
+
     "isloop":false # Flag to true if training with pseudo-labels, false otherwise
 }
 ```
@@ -169,6 +202,13 @@ Then, after properly modifying the configuration file under the repository folde
 ``` 
 python main.py --cfg "configs/experiment.json"
 ``` 
+
+**Notes from update**: If you wish to use a simpler ResNet model please execute the following command:
+``` 
+python main_resnet.py --cfg "configs/experiment_resnet34.json"
+``` 
+And make sure that the  "resnet_size" field in the config is available.
+
 
 ### 3.2 Train a model with pseudo-labels
 

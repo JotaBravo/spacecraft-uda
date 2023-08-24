@@ -233,7 +233,7 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
             self.transform_input  = transform_input
             self.col_factor_input = ((config["cols"])/1920)
             self.row_factor_input = ((config["rows"])/1200)   
-
+            self.config = config
 
             
 
@@ -244,7 +244,8 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
             
             # Load image
             sample_id = self.sample_ids[idx]
-
+            #if sample_id == 'img019693.jpg':
+            #    sample_id = 'img019694.jpg'
             img_name  = os.path.join(self.image_root, sample_id)
             pil_image = cv2.imread(img_name)
             torch_image  = self.transform_input(pil_image)
@@ -283,15 +284,25 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
                 #kpts_im[:,1] *= self.row_factor_input
     
                 # Load the ground-truth heatmaps
-                heatmap_id  = sample_id.split(".jpg")[0] + ".npz"
-                data_loaded = np.load(os.path.join(self.mask_root, heatmap_id),allow_pickle=True)
-                
-                pil_heatmap  = data_loaded.f.arr_0.astype(np.float32)
-                #kpts_im      = data_loaded.f.arr_1.astype(np.float32)
-                #kpts_cam     = data_loaded.f.arr_2.astype(np.float32).T
-                visible_kpts = data_loaded.f.arr_3.astype(np.bool8)
+                heatmap = np.zeros((self.config["rows"], self.config["cols"],11),dtype='uint8')
+                target_name_02   = os.path.join(self.mask_root, sample_id.replace(".jpg","_02.png"))
+                target_name_35   = os.path.join(self.mask_root, sample_id.replace(".jpg","_35.png"))
+                target_name_69   = os.path.join(self.mask_root, sample_id.replace(".jpg","_69.png"))
+                target_name_1011 = os.path.join(self.mask_root, sample_id.replace(".jpg","_1011.png"))
+
+                img_02   = cv2.imread(target_name_02)
+                img_35   = cv2.imread(target_name_35)
+                img_69   = cv2.imread(target_name_69)
+                img_1011 = cv2.imread(target_name_1011)
+
+                heatmap[:,:,0:3]  = img_02
+                heatmap[:,:,3:6]  = img_35
+                heatmap[:,:,6:9]  = img_69
+                heatmap[:,:,9:11] = img_1011[:,:,1:]
+
+                visible_kpts = np.max(np.max(heatmap,axis=0),axis=0)
+                torch_heatmap = self.transform_input(heatmap)
             
-                torch_heatmap  = self.transform_input(pil_heatmap)
 
         
             sample = dict()
@@ -300,7 +311,7 @@ class PyTorchSatellitePoseEstimationDataset(Dataset):
                 sample["heatmap"]    = torch_heatmap
                 sample["kpts_3Dcam"] = kpts_cam.astype(np.float32)
                 sample["kpts_2Dim"]  = kpts_im.astype(np.float32)
-                sample["visible_kpts"] = visible_kpts
+                sample["visible_kpts"] = visible_kpts.astype(np.bool)
 
                 sample["q0"]         = np.array(q0).astype(np.float32)  
                 sample["r0"]         = np.array(r0).astype(np.float32)   

@@ -202,18 +202,26 @@ def point_sample(input, points, align_corners=True, **kwargs):
 
 
 
-def update_writer(writer,input_dict,iteration, config): # ppp + len(train_loader)*epoch
+def update_writer(writer, input_dict, iteration, config): # ppp + len(train_loader)*epoch
+    
+    second_map = 0
+    # lazy workaround for the case when we have only one map
+    if  ("heatmap",1) in input_dict:
+        second_map = 1
+        
 
+
+    
     with torch.no_grad():
 
-        writer.add_scalar("Total Train Loss ",  input_dict["total_loss",0] + input_dict["total_loss",1], iteration)
-        writer.add_scalar("Heatmap Loss ",      input_dict["loss_hm",0]      + input_dict["loss_hm" ,1], iteration)
+        writer.add_scalar("Total Train Loss ",  input_dict["total_loss",0] + input_dict["total_loss",second_map], iteration)
+        writer.add_scalar("Heatmap Loss ",      input_dict["loss_hm",0]      + input_dict["loss_hm" ,second_map], iteration)
         if config["activate_lpnp"]:                
-            writer.add_scalar("PnP Loss ",          input_dict["loss_pnp",0]     + input_dict["loss_pnp" ,1], iteration)
+            writer.add_scalar("PnP Loss ",          input_dict["loss_pnp",0]     + input_dict["loss_pnp" ,second_map], iteration)
         if config["activate_l3d"]:                
-            writer.add_scalar("3D  Loss ",          input_dict["loss_3d",0]      + input_dict["loss_3d" ,1],  iteration)
-            writer.add_scalar("Rotation  Loss ",    input_dict["rot_err",0]      + input_dict["rot_err" ,1],  iteration)
-            writer.add_scalar("Translation  Loss ", input_dict["tra_err",0]      + input_dict["tra_err" ,1],  iteration)
+            writer.add_scalar("3D  Loss ",          input_dict["loss_3d",0]      + input_dict["loss_3d" ,second_map],  iteration)
+            writer.add_scalar("Rotation  Loss ",    input_dict["rot_err",0]      + input_dict["rot_err" ,second_map],  iteration)
+            writer.add_scalar("Translation  Loss ", input_dict["tra_err",0]      + input_dict["tra_err" ,second_map],  iteration)
 
         image = tensor_to_cvmat(input_dict["img_source"].sum(1,True)[0])
         image = draw_keypoints(image,tensor_to_mat(input_dict["kpts_gt"][0]),color=(0,255,0))
@@ -228,21 +236,21 @@ def update_writer(writer,input_dict,iteration, config): # ppp + len(train_loader
 
         hm_c_0 = cv2.resize(hm_c_0,(200,200))
 
-        hm_c_1 = tensor_to_cvmat(input_dict["heatmap",1].sum(1,True)[0])
+        hm_c_1 = tensor_to_cvmat(input_dict["heatmap",second_map].sum(1,True)[0])
         if config["activate_lpnp"]:                
-            hm_c_1 = draw_keypoints(hm_c_1,tensor_to_mat(input_dict["kpts_pnp",1][0]),color=(0,255,255))
+            hm_c_1 = draw_keypoints(hm_c_1,tensor_to_mat(input_dict["kpts_pnp",second_map][0]),color=(0,255,255))
         hm_c_1 = cv2.resize(hm_c_1,(200,200))
         if config["activate_l3d"]:                
 
             kpts_3d_1 = BPnP.batch_project(input_dict["poses_3d",0], input_dict["kpts_world"] , input_dict["k_mat_input"])  
-            kpts_3d_2 = BPnP.batch_project(input_dict["poses_3d",1], input_dict["kpts_world"] , input_dict["k_mat_input"])  
+            kpts_3d_2 = BPnP.batch_project(input_dict["poses_3d",second_map], input_dict["kpts_world"] , input_dict["k_mat_input"])  
 
 
         depth_0 = tensor_to_cvmat(input_dict["depth",0].sum(1,True)[0])
         if config["activate_l3d"]:                
             depth_0 = draw_keypoints(depth_0,tensor_to_mat(kpts_3d_1[0]),color=(0,255,255))
         depth_0 = cv2.resize(depth_0,(200,200))
-        depth_1 = tensor_to_cvmat(input_dict["depth",1].sum(1,True)[0])
+        depth_1 = tensor_to_cvmat(input_dict["depth",second_map].sum(1,True)[0])
         if config["activate_l3d"]:                
             depth_1 = draw_keypoints(depth_1,tensor_to_mat(kpts_3d_2[0]),color=(0,255,255))
         depth_1 = cv2.resize(depth_1,(200,200))                        
@@ -310,8 +318,6 @@ def generate_json_loop(test_loader ,aug_intensity_test, hourglass, kpts_world, k
             pred_kpts_1 = heatmap_to_points(pred_mask_1)
             pred_kpts_0 = tensor_to_mat(pred_kpts_0[0])
             pred_kpts_1 = tensor_to_mat(pred_kpts_1[0])
-           # cv2.imwrite("kpts_0.jpg",draw_keypoints(tensor_to_cvmat(img[0]),pred_kpts_0))
-           # cv2.imwrite("kpts_1.jpg",draw_keypoints(tensor_to_cvmat(img[0]),pred_kpts_1))
 
             responses_0 = np.max(np.max(tensor_to_mat(pred_mask_list[0]["hm_c"]),axis=1),axis=1)
             responses_1 = np.max(np.max(tensor_to_mat(pred_mask_list[1]["hm_c"]),axis=1),axis=1)
@@ -339,11 +345,12 @@ def generate_json_loop(test_loader ,aug_intensity_test, hourglass, kpts_world, k
             total_rp1 = responses_1[index_max_1]
             total_rp1 = np.sum(total_rp1[:npts])
 
-            aux_0, rvecs_0, tvecs_0, inliers_0= cv2.solvePnPRansac(world_kpts2_0, pred_kpts_0, k_mat_input, np.array(cam.dcoef),confidence=0.999,reprojectionError=0.9,flags=cv2.SOLVEPNP_EPNP)
-            aux_1, rvecs_1, tvecs_1, inliers_1= cv2.solvePnPRansac(world_kpts2_1, pred_kpts_1, k_mat_input, np.array(cam.dcoef),confidence=0.999,reprojectionError=0.9,flags=cv2.SOLVEPNP_EPNP)
+            aux_0, rvecs_0, tvecs_0, inliers_0= cv2.solvePnPRansac(world_kpts2_0, pred_kpts_0, k_mat_input, np.array(cam.dcoef),confidence=0.99,reprojectionError=2.0,flags=cv2.SOLVEPNP_EPNP)
+            aux_1, rvecs_1, tvecs_1, inliers_1= cv2.solvePnPRansac(world_kpts2_1, pred_kpts_1, k_mat_input, np.array(cam.dcoef),confidence=0.99,reprojectionError=2.0,flags=cv2.SOLVEPNP_EPNP)
 
-            aux_0 = aux_1 = True
+            
             if aux_0 and aux_1:
+
                 if total_rp0 > total_rp1:
                     out_tvec = tvecs_0
                     out_rvec = rvecs_0

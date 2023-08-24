@@ -7,8 +7,11 @@ from tqdm import tqdm
 from src import utils
 import argparse
 from multiprocessing import Pool
-from multiprocessing import freeze_support
 import time
+import torch
+from kornia.geometry import render_gaussian2d
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning) 
 
 '''Define function to run mutiple processors and pool the results together'''
 def run_multiprocessing(func, i, n_processors):
@@ -101,6 +104,8 @@ config = utils.load_config(args.cfg)
 
 
 speed_root = config["root_dir"]
+
+
 if config["split_submission"] == "sunlamp":
     dataset_id = "sunlamp_train"
 if config["split_submission"] == "lightbox":
@@ -110,30 +115,32 @@ if config["split_submission"] == "synthetic":
 
 image_root = os.path.join(speed_root, dataset_id, 'images')
 
+kptsmap_root = os.path.join(speed_root, dataset_id, 'kptsmap')
+
 if dataset_id == "sunlamp_train" or dataset_id == "lightbox_train": # reset all maps
     kptsmap_root = os.path.join(speed_root, dataset_id, 'kptsmap')
     os.system("rm " + kptsmap_root + "/*.*")
 
 with open(os.path.join(speed_root, dataset_id, "train" + '.json'), 'r') as f:
         label_list = json.load(f)
+
 if config["split_submission"] == "synthetic":
     with open(os.path.join(speed_root, dataset_id, "validation" + '.json'), 'r') as f:
-        label_list += json.load(f)      
-          
+        label_list += json.load(f)
+
+        
 sample_ids = [label['filename'] for label in label_list]
 labels = {label['filename']: {'q': label['q_vbs2tango_true'], 'r': label['r_Vo2To_vbs_true']} for label in label_list}
 tmp = scipy.io.loadmat(speed_root + "kpts.mat")
 kpts = np.array(tmp["corners"])
 cam = Camera(speed_root)
-
+K = cam.K
+K[0, :] *= ((config["cols"])/1920)
+K[1, :] *= ((config["rows"])/1200)   
 
 '''Define task function'''
 def save_map(sample_id):
-    
-    sample_number = float(sample_id.split("img")[1].split(".jpg")[0])
 
-    img_name  = os.path.join(image_root, sample_id)
-    pil_image = cv2.imread(img_name)
 
     q_return, r = labels[sample_id]['q'], labels[sample_id]['r']
 
@@ -144,41 +151,41 @@ def save_map(sample_id):
     r2 = q@(r2)
 
 
-
     tmp     = q.T@(kpts+r2)
-    kpts_im = cam.K@(tmp/tmp[2,:])
+    kpts_im = K@(tmp/tmp[2,:])
     kpts_im = np.transpose(kpts_im[:2,:])
-    #kpts_im[kpts_im[:,0] >= 1920,0] = 1920-1
-    #kpts_im[kpts_im[:,0] <= 0   ,0] = 0
-    #kpts_im[kpts_im[:,1] >= 1200,1] = 1200-1
-    #kpts_im[kpts_im[:,1] <= 0   ,1] = 0
-    pil_drawkpts = np.zeros((1200, 1920, 11))
-    vis = np.zeros((11),dtype=bool)
-    for i, pt in enumerate(kpts_im):
-        aux, vis[i] =  draw_labelmap(pil_drawkpts[:,:,i], pt, 15.0, type='Gaussian')
-        if vis[i]:
-            aux = ((aux-np.min(aux))/(np.max(aux)-np.min(aux)))
-            pil_drawkpts[:,:,i]  = aux
+
+    points = torch.from_numpy(kpts_im).to(config["device"]).unsqueeze(0)
+    
+    heatmap = render_gaussian2d(mean=points,
+                                std=50*torch.ones_like(points,requires_grad=False),
+                                size=[config["rows"],config["cols"]],
+                                normalized_coordinates=False)
+
+    heatmap    = utils.tensor_to_mat(heatmap[0])
+    max_per_ch = np.max(np.max(heatmap,axis=2),axis=1)
+
+    heatmap    = (heatmap/max_per_ch[:,None,None])*255.0
+
+    heatmap    = np.transpose(heatmap,(1,2,0))
+
+    savename = os.path.join(kptsmap_root, sample_id.split(".jpg")[0])
+
+    target_name_02   = savename + "_02.png"
+    target_name_35   = savename + "_35.png"
+    target_name_69   = savename + "_69.png"
+    target_name_1011 = savename + "_1011.png"
 
 
-    filt_kpts_im = kpts_im[vis,:]
-    filt_kpts    = kpts[:,vis]
-
-
-    savename = os.path.join(kptsmap_root,sample_id.split(".jpg")[0])
-
-    np.savez_compressed(savename, pil_drawkpts, filt_kpts_im, filt_kpts, vis, allow_pickle=True)
-
+    cv2.imwrite(target_name_02,   heatmap[:,:,0:3])
+    cv2.imwrite(target_name_35,   heatmap[:,:,3:6])
+    cv2.imwrite(target_name_69,   heatmap[:,:,6:9])
+    cv2.imwrite(target_name_1011, heatmap[:,:,8:])
 
 
 
 def main():
-    #start = time.perf_counter()
-#
-    '''
-    set up parameters required by the task
-    '''
-    num_max = 1000000
+
     n_processors =8
     x_ls = sample_ids
 
@@ -186,10 +193,7 @@ def main():
     pass the task function, followed by the parameters to processors
     '''
     out = run_multiprocessing(save_map, x_ls, n_processors)
-#
-#
-    #print("Mutiprocessing time: {}mins\n".format((time.clock()-start)/60))
-    #print("Mutiprocessing time: {}secs\n".format((time.clock()-start)))
+
 if __name__ == "__main__":
     #freeze_support()   # required to use multiprocessinsg
     main()   
