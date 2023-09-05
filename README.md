@@ -28,7 +28,7 @@ We have updated the repository to include:
 
 ## Cite
 
-If you find this work useful, please consider citing:
+If you find our work or code useful, please cite:
 ```
 @article{perez2023spacecraft,
   title={Spacecraft Pose Estimation: Robust 2D and 3D-Structural Losses and Unsupervised Domain Adaptation by Inter-Model Consensus},
